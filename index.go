@@ -3,9 +3,9 @@ package main
 import (
 	"net/http" 
 	"html/template" 
-	"fmt"
 	"log"
-	"labix.org/v2/mgo"
+	"fmt"
+//	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	//	"strings"
 	//	"os" 
@@ -13,6 +13,7 @@ import (
 	// youtube
 	"flag"
 	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/download/youtube"
+	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/db/mongo"
 )
 
 var NWorkers = flag.Int("n", 5, "The number of workers to start")
@@ -21,7 +22,7 @@ var NWorkers = flag.Int("n", 5, "The number of workers to start")
 type Task struct { 
 	Fetchurl string
 	Downloadurl string
-	Status int
+	Status int // 0 队列中 1 下载中 2 下载完成 3 上传中 4 上传完成[可供用户下载]
 }
 
 func main() {
@@ -34,24 +35,31 @@ func main() {
 	
 	http.HandleFunc("/", index)
 	http.HandleFunc("/addurl", addurl)
+	http.HandleFunc("/test", testedit)
+	http.HandleFunc("/clear", clear)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
+func clear(w http.ResponseWriter, r *http.Request) {
+	C := mongo.Connect()	
+	C.Remove(bson.M{"fetchurl":"https://www.youtube.com/watch?v=SbY33tZl_pY"})
+}
+
+func testedit(w http.ResponseWriter, r *http.Request) {
+	C := mongo.Connect()
+	err := C.Update(bson.M{"fetchurl": "https://www.youtube.com/watch?v=SbY33tZl_pY"}, bson.M{"$set": bson.M{"downloadurl": "http://www.baidu.com"}})
+	checkError(err)
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {		
-		session, err := mgo.Dial("localhost")
-		if err != nil {
-			panic(err)
-		}
-		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)		
-		c := session.DB("docker").C("task")
+		C := mongo.Connect()
 		
 		var tasks []Task
-		c.Find(nil).All(&tasks) //查询所有
+		C.Find(nil).All(&tasks) //查询所有
 //	    for _, r := range tasks {
 //			fmt.Println(" r.fetchurl = "+r.Fetchurl+" r.status = ")
 //		}
@@ -71,29 +79,22 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 	} else {
 		r.ParseForm()	
 
-		fetchurl := r.Form["fetchurl"][0] // 
+		fetchurl := r.Form["fetchurl"][0]
 
 		fmt.Println("url : = " + fetchurl)
 
-		session, err := mgo.Dial("localhost")
-		if err != nil {
-			panic(err)
-		}
-		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)		
-		c := session.DB("docker").C("task") 
+		C := mongo.Connect()
 		
 		task := Task{} 
-		err = c.Find(bson.M{"Fetchurl": fetchurl}).One(&task)
+		err := C.Find(bson.M{"fetchurl": fetchurl}).One(&task)
 
 		if err != nil {
-			err = c.Insert(&Task{fetchurl, "", 0})
+			err = C.Insert(&Task{fetchurl, "", 0})
 			checkError(err)	
 			youtube.Collector(fetchurl)
 		} else {
 			fmt.Println("任务已经在下载队列中")
 		}		 
-		http.Redirect(w, r, "/", 302)	
 		
 	}
 }
