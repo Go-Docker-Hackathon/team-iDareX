@@ -12,7 +12,7 @@ func Collector (w http.ResponseWriter, r *http.Request) {
 	
 	// make sure we can only be called with an HTTP POST request.
 	if r.Method != "POST" {
-		t, _ := template.ParseFiles("/gopath/src/app/collectorLinkForm.gtpl")
+		t, _ := template.ParseFiles("./collectorLinkForm.gtpl")
 		t.Execute(w, nil)
 		return
 	}
@@ -25,6 +25,8 @@ func Collector (w http.ResponseWriter, r *http.Request) {
 	}
 	
 	work := WorkRequest{ Url: url}
+	
+	// insert to mongo , status is in queue.
 	
 	WorkQueue <- work
 	fmt.Println("work request queued")

@@ -34,6 +34,12 @@ func (w Worker) Start() {
 				// Receive a work request.
 				fmt.Printf("worker%d: Received work request\n", w.ID)
 				fmt.Printf("worker %d: Url: %s\n", w.ID, work.Url)
+				
+				fileName, err := YoutubeDl(work.Url)
+				if err != nil {
+					fmt.Println("error with YoutubeDl:", err)
+				}
+				fmt.Println("filename:", fileName, "on worker")
 			case <-w.QuitChan:
 				// We have been asked to stop.
 				fmt.Printf("worker %d stopping\n", w.ID)
