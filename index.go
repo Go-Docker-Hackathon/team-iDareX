@@ -35,7 +35,6 @@ func main() {
 	
 	http.HandleFunc("/", index)
 	http.HandleFunc("/addurl", addurl)
-	http.HandleFunc("/test", testedit)
 	http.HandleFunc("/clear", clear)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -46,12 +45,6 @@ func main() {
 func clear(w http.ResponseWriter, r *http.Request) {
 	C := mongo.Connect()	
 	C.Remove(bson.M{"fetchurl":"https://www.youtube.com/watch?v=SbY33tZl_pY"})
-}
-
-func testedit(w http.ResponseWriter, r *http.Request) {
-	C := mongo.Connect()
-	err := C.Update(bson.M{"fetchurl": "https://www.youtube.com/watch?v=SbY33tZl_pY"}, bson.M{"$set": bson.M{"downloadurl": "http://www.baidu.com"}})
-	checkError(err)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
