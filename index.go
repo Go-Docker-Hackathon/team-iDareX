@@ -9,7 +9,13 @@ import (
 	"labix.org/v2/mgo/bson"
 	//	"strings"
 	//	"os" 
+	
+	// youtube
+	"flag"
+	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/download/youtube"
 )
+
+var NWorkers = flag.Int("n", 5, "The number of workers to start")
 
 // 任务的结构
 type Task struct { 
@@ -19,6 +25,13 @@ type Task struct {
 }
 
 func main() {
+	// Parse the command-line flags.
+	flag.Parse()
+
+	// Start the dispatcher.
+	fmt.Println("Starting the dispatcher")
+	youtube.StartDispatcher(*NWorkers)
+	
 	http.HandleFunc("/", index)
 	http.HandleFunc("/addurl", addurl)
 	err := http.ListenAndServe(":8080", nil)
@@ -74,10 +87,11 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 		err = c.Find(bson.M{"Fetchurl": fetchurl}).One(&task)
 
 		if err != nil {
-			fmt.Println("任务已经在下载队列中")
+			err = c.Insert(&Task{fetchurl, "", 0})
+			checkError(err)	
+			youtube.Collector(fetchurl)
 		} else {
-			err = c.Insert(&Task{fetchurl, "", 0}) 
-			checkError(err)				
+			fmt.Println("任务已经在下载队列中")
 		}		 
 		http.Redirect(w, r, "/", 302)	
 		
