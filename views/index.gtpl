@@ -10,7 +10,6 @@
     <!-- Bootstrap -->
 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	
-	
     <link href="http://v3.bootcss.com/examples/cover/cover.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
