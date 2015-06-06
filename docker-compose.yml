@@ -1,0 +1,6 @@
+steamer:
+  build: .
+  ports:
+   - "18080:8080"
+  volumes:
+    - /Users/bob/Projects/hackathon/steamer/steamerDataDir:/steamerDataDir:rw
