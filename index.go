@@ -19,7 +19,7 @@ import (
 var NWorkers = flag.Int("n", 5, "The number of workers to start")
 
 // 任务的结构
-type Task struct { 
+type Task struct {
 	Fetchurl string
 	Downloadurl string
 	Status int // 0 队列中 1 下载中 2 下载完成 3 上传中 4 上传完成[可供用户下载], 上传完成需要将Downloadurl修改成上传完的地址
