@@ -35,6 +35,7 @@ func main() {
 	
 	http.HandleFunc("/", index)
 	http.HandleFunc("/addurl", addurl)
+	http.HandleFunc("/search", search)
 	http.HandleFunc("/clear", clear)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -95,6 +96,16 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 
 		http.Redirect(w, r, "/", 302)		
 	}
+}
+
+func search(w http.ResponseWriter, r *http.Request) {
+	result := `
+	{
+		{"format":1, "extension":"mp4", "note":"分辨率: 640x320 详情: 30M"},
+		{"format":2, "extension":"mp3", "note":"分辨率: 480x320 详情: 20M"},		
+	}
+	`
+	fmt.Fprintf(w, result)	
 }
 
 func checkError(err error) {
