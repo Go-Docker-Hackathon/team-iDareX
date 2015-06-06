@@ -22,7 +22,7 @@ var NWorkers = flag.Int("n", 5, "The number of workers to start")
 type Task struct { 
 	Fetchurl string
 	Downloadurl string
-	Status int // 0 队列中 1 下载中 2 下载完成 3 上传中 4 上传完成[可供用户下载]
+	Status int // 0 队列中 1 下载中 2 下载完成 3 上传中 4 上传完成[可供用户下载], 上传完成需要将Downloadurl修改成上传完的地址
 }
 
 func main() {
@@ -35,7 +35,6 @@ func main() {
 	
 	http.HandleFunc("/", index)
 	http.HandleFunc("/addurl", addurl)
-	http.HandleFunc("/test", testedit)
 	http.HandleFunc("/clear", clear)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -48,18 +47,13 @@ func clear(w http.ResponseWriter, r *http.Request) {
 	C.Remove(bson.M{"fetchurl":"https://www.youtube.com/watch?v=SbY33tZl_pY"})
 }
 
-func testedit(w http.ResponseWriter, r *http.Request) {
-	C := mongo.Connect()
-	err := C.Update(bson.M{"fetchurl": "https://www.youtube.com/watch?v=SbY33tZl_pY"}, bson.M{"$set": bson.M{"downloadurl": "http://www.baidu.com"}})
-	checkError(err)
-}
-
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {		
 		C := mongo.Connect()
 
 		var tasks []Task
-		C.Find(nil).All(&tasks) //查询所有
+		err := C.Find(nil).All(&tasks) //查询所有
+		checkError(err)
 //	    for _, r := range tasks {
 //			fmt.Println(" r.fetchurl = "+r.Fetchurl+" r.status = ")
 //		}
@@ -78,23 +72,28 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else {
 		r.ParseForm()	
-
 		fetchurl := r.Form["fetchurl"][0]
-
+		if fetchurl == "" {
+			http.Redirect(w, r, "/", 302)
+		}
+		
 		fmt.Println("url : = " + fetchurl)
 
 		C := mongo.Connect()
 		
 		task := Task{} 
 		err := C.Find(bson.M{"fetchurl": fetchurl}).One(&task)
-
+		
 		if err != nil {
-			checkError(err)	
+			fmt.Println("err", err.Error())
+			
+			err = C.Insert(&Task{fetchurl, "", 0})
 			youtube.Collector(fetchurl)
 		} else {
 			fmt.Println("任务已经在下载队列中")
 		}		 
-		
+
+		http.Redirect(w, r, "/", 302)		
 	}
 }
 

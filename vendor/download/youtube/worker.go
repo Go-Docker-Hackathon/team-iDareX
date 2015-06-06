@@ -3,6 +3,8 @@ package youtube
 import (
 	"fmt"
 	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/upload/qiniu"
+	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/db/mongo"
+	"labix.org/v2/mgo/bson"
 )
 
 type Worker struct{
@@ -41,6 +43,11 @@ func (w Worker) Start() {
 					fmt.Println("error with YoutubeDl:", err)
 				}
 				fmt.Println("filename:", fileName, "on worker")
+				
+				// change task status
+				C := mongo.Connect()
+				C.Update(bson.M{"fetchurl": work.Url}, bson.M{"$set": bson.M{"status": 2}}) // downloading
+				fmt.Println("mongodb downloading")
 				
 				fmt.Println("upload to qiniu: ", fileName)
 				key, err1 := qiniu.UploadQiniu(fileName)
