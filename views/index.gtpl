@@ -31,14 +31,28 @@
 	{{range .}}
 	<p class="bg-info">
 	Youtube链接: <a href="{{.Fetchurl}}"> {{.Fetchurl}} </a>
-	下载链接: <a href="{{.Downloadurl}}">{{.Downloadurl}}</a>
-		{{if eq 0 .Status}}
+	{{if eq 0 .Status}}
 	队列中
+	{{else if eq 1 .Status}}
+	下载中
+	{{else if eq 2 .Status}}
+	下载完成
+	{{else if eq 3 .Status}}
+	上传中
+	{{else if eq 4 .Status}}
+	上传完成
+	{{end}}
+	
+
+	{{if eq 4 .Status}}
+		下载链接: <a href="{{.Downloadurl}}">{{.Downloadurl}}</a>	
 	{{else}}
-	已下载
+		{{.Downloadurl}}	
 	{{end}}
 	</p>
 	{{end}}
+	
+
 	
 	</div>
 
