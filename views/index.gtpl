@@ -18,6 +18,11 @@
       <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+	<style>
+	li {
+		list-style:none;
+	}
+	</style>
   </head>
   <body>
 	<div class="site-wrapper">
@@ -34,7 +39,12 @@
 		
 			<form class="form-inline" action="/addurl" method="POST">
 				<div class="">
-				  <input type="url" style="width:500px" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
+				  <input type="url" style="width:300px" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
+				  <a href="#" id="search" class="btn btn-default">搜索</a>
+				<br />  
+				<ul id="detail">
+								
+				</ul>
 				  <button type="submit" class="btn btn-default">提交任务</button>
 				</div>
 			</form>
@@ -78,6 +88,22 @@
       </div>
 
     </div>
+	
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	
+	<script>
+	$('#search').click(function (e) {
+		url = $("input").val();
+		$.post("/search", {url: url}, function(data){
+			var jsonData = eval("(" + data + ")");
+			var detail = $("#detail"); 
+			$.each(jsonData, function(index, objVal) { //遍历对象数组，index是数组的索引号，objVal是遍历的一个对象。  					
+				$("<li>").html('<label for="f'+objVal["format"]+'"> <input id="f'+objVal["format"]+'" type="radio" value="'+objVal["format"]+'" name="format"> ' + objVal["extension"] + objVal["note"]+'</label>').appendTo(detail);
+            });  
+		});
+	})
+	</script>
 	
   </body>
 </html>
