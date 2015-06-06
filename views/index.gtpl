@@ -9,6 +9,9 @@
 
     <!-- Bootstrap -->
 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	
+	
+    <link href="http://v3.bootcss.com/examples/cover/cover.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,43 +21,65 @@
     <![endif]-->
   </head>
   <body>
-	<div class="warpper">
-    <h1>Steamer</h1>
-	
-	<form class="form-inline" action="/addurl" method="POST">
-		<div class="">
-		  <input type="url" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
-		  <button type="submit" class="btn btn-default">添加任务</button>
-		</div>
-	</form>
-	
-	{{range .}}
-	<p class="bg-info">
-	Youtube链接: <a href="{{.Fetchurl}}"> {{.Fetchurl}} </a>
-	{{if eq 0 .Status}}
-	队列中
-	{{else if eq 1 .Status}}
-	下载中
-	{{else if eq 2 .Status}}
-	下载完成
-	{{else if eq 3 .Status}}
-	上传中
-	{{else if eq 4 .Status}}
-	上传完成
-	{{end}}
-	
+	<div class="site-wrapper">
 
-	{{if eq 4 .Status}}
-		下载链接: <a href="{{.Downloadurl}}">{{.Downloadurl}}</a>	
-	{{else}}
-		{{.Downloadurl}}	
-	{{end}}
-	</p>
-	{{end}}
-	
+      <div class="site-wrapper-inner">
 
-	
-	</div>
+        <div class="cover-container">
 
+          <div class="masthead clearfix">
+
+          </div>
+
+          <div class="inner cover">
+		
+			<form class="form-inline" action="/addurl" method="POST">
+				<div class="">
+				  <input type="url" style="width:500px" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
+				  <button type="submit" class="btn btn-default">提交任务</button>
+				</div>
+			</form>
+			
+			<div style="height:50px;"></div>
+			
+			<ul class="list-group">
+				{{range .}}
+					  <li class="list-group-item list-group-item-info">
+						Youtube链接: <a href="{{.Fetchurl}}"> {{.Fetchurl}} </a>
+							
+						{{if eq 0 .Status}}
+						<span class="label label-default">队列中</span>
+						{{else if eq 1 .Status}}
+						<span class="label label-warning">正在下载</span>
+						{{else if eq 2 .Status}}
+						<span class="label label-info">下载完成</span>
+						{{else if eq 3 .Status}}
+						<span class="label label-primary">正在上传</span>
+						{{else if eq 4 .Status}}
+						<span class="label label-success">上传完成</span>
+						{{end}}
+					
+						{{if eq 4 .Status}}
+							下载链接: <a href="{{.Downloadurl}}">{{.Downloadurl}}</a>	
+						{{else}}
+							{{.Downloadurl}}	
+						{{end}}
+					</li>
+				{{end}}
+			</ul>
+
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+	
   </body>
 </html>

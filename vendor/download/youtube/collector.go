@@ -8,14 +8,12 @@ import (
 var WorkQueue = make(chan WorkRequest, 100)
 
 func Collector(url string) {
-
-	work := WorkRequest{ Url: url}
+	C := mongo.Connect()
+	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 1}}) // start download
 	
-	// insert to mongo , status is in queue.
-	
+	work := WorkRequest{ Url: url}	
 	WorkQueue <- work
 	
 	// change task status
-	C := mongo.Connect()
-	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 1}}) // downloading
+	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 2}}) // downloading
 }

@@ -3,7 +3,7 @@ package mongo
 import (
 	"labix.org/v2/mgo"
 	"os"
-	"fmt"
+//	"fmt"
 )
 
 var Session *mgo.Session
@@ -18,12 +18,11 @@ func Connect() *mgo.Collection{
 	MONGODB_PORT_27017_TCP_PORT := os.Getenv("MONGODB_PORT_27017_TCP_PORT")	
 	MONGODB_INSTANCE_NAME := os.Getenv("MONGODB_INSTANCE_NAME")
 
-	fmt.Println("username "+ MONGODB_USERNAME)
-	
+//	fmt.Println("username "+ MONGODB_USERNAME)	
 	if MONGODB_USERNAME != "" {
 		Session, _ = mgo.Dial("mongodb://" + MONGODB_USERNAME + ":" + MONGODB_PASSWORD + "@" + MONGODB_PORT_27017_TCP_ADDR + ":"  + MONGODB_PORT_27017_TCP_PORT + "/" + MONGODB_INSTANCE_NAME)		
 	} else {
-		fmt.Println("username "+ MONGODB_USERNAME)
+//		fmt.Println("username "+ MONGODB_USERNAME)
 		
 		if MONGODB_PORT_27017_TCP_ADDR != ""  {
 			Session, _ = mgo.Dial("mongodb://" + MONGODB_PORT_27017_TCP_ADDR + ":"  + MONGODB_PORT_27017_TCP_PORT + "/" + "docker")			
