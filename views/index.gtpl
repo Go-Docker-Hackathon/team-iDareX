@@ -44,8 +44,7 @@
 			<ul class="list-group">
 				{{range .}}
 					  <li class="list-group-item list-group-item-info">
-						Youtube链接: <a href="{{.Fetchurl}}"> {{.Fetchurl}} </a>
-							
+						Youtube链接: <a href="{{.Fetchurl}}"> {{.Fetchurl}} </a>							
 						{{if eq 0 .Status}}
 						<span class="label label-default">队列中</span>
 						{{else if eq 1 .Status}}
@@ -56,10 +55,10 @@
 						<span class="label label-primary">正在上传</span>
 						{{else if eq 4 .Status}}
 						<span class="label label-success">上传完成</span>
-						{{end}}
-					
+						{{end}}					
+												
 						{{if eq 4 .Status}}
-							下载链接: <a href="{{.Downloadurl}}">{{.Downloadurl}}</a>	
+							<a href="{{.Downloadurl}}">下载链接</a>	
 						{{else}}
 							{{.Downloadurl}}	
 						{{end}}

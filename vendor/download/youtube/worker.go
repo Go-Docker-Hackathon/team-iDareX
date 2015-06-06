@@ -57,7 +57,7 @@ func (w Worker) Start() {
 				if err1 != nil {
 					fmt.Println("upload file to qiniu error:", err1, "filename:", fileName)
 				}else{
-					C.Update(bson.M{"fetchurl": videoUrl}, bson.M{"$set": bson.M{"status": 4}}) // upload finish
+					C.Update(bson.M{"fetchurl": work.Url}, bson.M{"$set": bson.M{"status": 4}}) // upload finish
 					fmt.Println("mongodb upload finish")
 					downloadurl := "http://7xjhxh.com1.z0.glb.clouddn.com" + key
 					C.Update(bson.M{"fetchurl": work.Url}, bson.M{"$set": bson.M{"downloadurl": downloadurl}}) // set download key

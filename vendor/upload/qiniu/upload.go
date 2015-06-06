@@ -2,9 +2,6 @@ package qiniu
 
 import (
 	"github.com/qiniu/api/rs"
-	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/db/mongo"
-	"labix.org/v2/mgo/bson"
-	"fmt"
 )
 
 import . "github.com/qiniu/api/conf"
