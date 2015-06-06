@@ -1,34 +1,21 @@
 package youtube
 
 import (
-	"fmt"
-	"net/http"
-	"html/template"
+	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/db/mongo"
+	"labix.org/v2/mgo/bson"
 )
 
 var WorkQueue = make(chan WorkRequest, 100)
 
-func Collector (w http.ResponseWriter, r *http.Request) {
-	
-	// make sure we can only be called with an HTTP POST request.
-	if r.Method != "POST" {
-		t, _ := template.ParseFiles("/gopath/src/app/collectorLinkForm.gtpl")
-		t.Execute(w, nil)
-		return
-	}
-	
-	url := r.FormValue("url")
-	
-	if url == "" {
-		http.Error(w, "You must specify a url.", http.StatusBadRequest)
-		return
-	}
-	
+func Collector(url string) {
+
 	work := WorkRequest{ Url: url}
 	
+	// insert to mongo , status is in queue.
+	
 	WorkQueue <- work
-	fmt.Println("work request queued")
-	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, "Url: " + url + " 已经收，服务器正在努力处理！")
-	return
+	
+	// change task status
+	C := mongo.Connect()
+	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 1}}) // downloading
 }

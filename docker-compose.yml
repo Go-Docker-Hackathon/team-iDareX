@@ -1,6 +1,13 @@
+mongo:
+  image: mongo
+  ports:
+    - "27017:27017"
+  command:
+    "--smallfiles"
+
 steamer:
   build: .
+  links:
+    - mongo:mongodb
   ports:
    - "18080:8080"
-  volumes:
-    - /Users/bob/Projects/hackathon/steamer/steamerDataDir:/steamerDataDir:rw

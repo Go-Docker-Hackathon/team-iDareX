@@ -2,6 +2,7 @@ package youtube
 
 import (
 	"fmt"
+	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/upload/qiniu"
 )
 
 type Worker struct{
@@ -34,6 +35,21 @@ func (w Worker) Start() {
 				// Receive a work request.
 				fmt.Printf("worker%d: Received work request\n", w.ID)
 				fmt.Printf("worker %d: Url: %s\n", w.ID, work.Url)
+				
+				fileName, err := YoutubeDl(work.Url)
+				if err != nil {
+					fmt.Println("error with YoutubeDl:", err)
+				}
+				fmt.Println("filename:", fileName, "on worker")
+				
+				fmt.Println("upload to qiniu: ", fileName)
+				key, err1 := qiniu.UploadQiniu(fileName)
+				if err1 != nil {
+					fmt.Println("upload file to qiniu error:", err1, "filename:", fileName)
+				}else{
+					fmt.Println("upload success, key:", key)
+				}
+				
 			case <-w.QuitChan:
 				// We have been asked to stop.
 				fmt.Printf("worker %d stopping\n", w.ID)
