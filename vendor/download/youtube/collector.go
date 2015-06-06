@@ -15,9 +15,5 @@ func Collector(url string) {
 	
 	work := WorkRequest{ Url: url}	
 	WorkQueue <- work
-	
-	// change task status
-	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 2}}) // downloading
-	fmt.Println("mongodb downloading")
 
 }
