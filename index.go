@@ -53,7 +53,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		C := mongo.Connect()
 
 		var tasks []Task
-		err := C.Find(nil).All(&tasks) //查询所有
+		err := C.Find(nil).Sort("-_id").Limit(20).All(&tasks) //查询所有
 		checkError(err)
 //	    for _, r := range tasks {
 //			fmt.Println(" r.fetchurl = "+r.Fetchurl+" r.status = ")
@@ -74,6 +74,7 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 	} else {
 		r.ParseForm()	
 		fetchurl := r.Form["fetchurl"][0]
+		formatId := r.Form["formatId"][0]
 		if fetchurl == "" {
 			http.Redirect(w, r, "/", 302)
 		}
@@ -89,7 +90,7 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("err", err.Error())
 			
 			err = C.Insert(&Task{fetchurl, "", 0})
-			youtube.Collector(fetchurl)
+			youtube.Collector(fetchurl, formatId)
 		} else {
 			fmt.Println("任务已经在下载队列中")
 		}		 
@@ -99,13 +100,10 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 }
 
 func search(w http.ResponseWriter, r *http.Request) {
-	result := `
-	{
-		{"format":1, "extension":"mp4", "note":"分辨率: 640x320 详情: 30M"},
-		{"format":2, "extension":"mp3", "note":"分辨率: 480x320 详情: 20M"},		
-	}
-	`
-	fmt.Fprintf(w, result)	
+	r.ParseForm()	
+	fetchurl := r.Form["fetchurl"][0]
+	data := youtube.GetVideoQuality(fetchurl)
+	fmt.Fprintf(w, data)	
 }
 
 func checkError(err error) {

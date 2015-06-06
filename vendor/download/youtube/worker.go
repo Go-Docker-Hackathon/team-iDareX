@@ -38,7 +38,7 @@ func (w Worker) Start() {
 				fmt.Printf("worker%d: Received work request\n", w.ID)
 				fmt.Printf("worker %d: Url: %s\n", w.ID, work.Url)
 
-				fileName, err := YoutubeDl(work.Url)
+				fileName, err := YoutubeDl(work)
 				if err != nil {
 					fmt.Println("error with YoutubeDl:", err)
 				}

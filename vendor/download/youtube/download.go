@@ -14,8 +14,10 @@ type VideoQuality struct {
 	Note       string
 }
 
-func YoutubeDl(url string) (fileName string, err error) {
-	format := selectVideoFormat(url)
+func YoutubeDl(workRequest WorkRequest) (fileName string, err error) {
+//	format := selectVideoFormat(url)
+	format := workRequest.FormatId
+	url := workRequest.Url
 	fmt.Println("format:", format)
 
 	fmt.Println("youtube-dl", "-o", "./steamerDataDir/%(title)s-%(format)-%(id)s.%(ext)s", "-f", format, url)
@@ -85,5 +87,5 @@ func GetVideoQuality(url string) string {
 		}
 	}
 	str, _ := json.Marshal(videoQualities)
-	return str
+	return string(str)
 }

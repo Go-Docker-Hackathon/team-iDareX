@@ -45,7 +45,7 @@
 				<ul id="detail">
 								
 				</ul>
-				  <button type="submit" class="btn btn-default">提交任务</button>
+				  <button type="submit" id="submit" style="display:none" class="btn btn-default">提交任务</button>
 				</div>
 			</form>
 			
@@ -95,12 +95,13 @@
 	<script>
 	$('#search').click(function (e) {
 		url = $("input").val();
-		$.post("/search", {url: url}, function(data){
+		$.post("/search", {fetchurl: url}, function(data){
 			var jsonData = eval("(" + data + ")");
 			var detail = $("#detail"); 
 			$.each(jsonData, function(index, objVal) { //遍历对象数组，index是数组的索引号，objVal是遍历的一个对象。  					
-				$("<li>").html('<label for="f'+objVal["format"]+'"> <input id="f'+objVal["format"]+'" type="radio" value="'+objVal["format"]+'" name="format"> ' + objVal["extension"] + objVal["note"]+'</label>').appendTo(detail);
+				$("<li>").html('<label for="f'+objVal["FormatId"]+'"> <input id="f'+objVal["FormatId"]+'" type="radio" value="'+objVal["FormatId"]+'" name="formatId"> Resolution: ' + objVal["Resolution"] + ' Extension: ' + objVal["Extension"] + " Note: " + objVal["Note"]+'</label>').appendTo(detail);
             });  
+			$("#submit").show();
 		});
 	})
 	</script>
