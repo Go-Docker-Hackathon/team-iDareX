@@ -8,12 +8,12 @@ import (
 
 var WorkQueue = make(chan WorkRequest, 100)
 
-func Collector(url string) {
+func Collector(url , formatId string) {
 	C := mongo.Connect()
 	C.Update(bson.M{"fetchurl": url}, bson.M{"$set": bson.M{"status": 1}}) // start download
 	fmt.Println("mongodb start download")
 	
-	work := WorkRequest{ Url: url}	
+	work := WorkRequest{ Url: url, FormatId: formatId}	
 	WorkQueue <- work
 
 }
