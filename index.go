@@ -57,7 +57,7 @@ func testedit(w http.ResponseWriter, r *http.Request) {
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {		
 		C := mongo.Connect()
-		
+
 		var tasks []Task
 		C.Find(nil).All(&tasks) //查询所有
 //	    for _, r := range tasks {
@@ -89,7 +89,6 @@ func addurl(w http.ResponseWriter, r *http.Request) {
 		err := C.Find(bson.M{"fetchurl": fetchurl}).One(&task)
 
 		if err != nil {
-			err = C.Insert(&Task{fetchurl, "", 0})
 			checkError(err)	
 			youtube.Collector(fetchurl)
 		} else {

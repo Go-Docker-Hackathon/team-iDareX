@@ -15,6 +15,3 @@ func Connect() *mgo.Collection{
 	
 	return Collection
 }
-
-
-

@@ -2,7 +2,7 @@ package youtube
 
 import (
 	"github.com/Go-Docker-Hackathon/team-iDareX/vendor/db/mongo"
-		"labix.org/v2/mgo/bson"
+	"labix.org/v2/mgo/bson"
 )
 
 var WorkQueue = make(chan WorkRequest, 100)
