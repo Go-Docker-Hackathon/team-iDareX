@@ -20,7 +20,7 @@
     <![endif]-->
 	<style>
 	li {
-		list-style:none;
+		text-align:left;
 	}
 	</style>
   </head>
@@ -30,26 +30,26 @@
       <div class="site-wrapper-inner">
 
         <div class="cover-container">
-
-          <div class="masthead clearfix">
-
-          </div>
-
-          <div class="inner cover">
+			<div style="text-align:left; padding-bottom:10px; padding-top:10px">
+				<img width="50%" src="http://7xji7p.com1.z0.glb.clouddn.com/steamer_logo.jpg" />
+				<div style="display:inline; width:48%; float:right; letter-spacing: 3px; padding-top:160px;">
+				Steamer /ˈstiːmə(r)/ 可以译成“汽船”，它是用来帮助你下载 Youtube 视频的，你可以填一个视频的链接，选择相应画质，然后 Steamer 将在下载完成后，把视频上传到七牛或其它你的云存储，或视频网站上去
+				</div>
+			</div>
 		
 			<form class="form-inline" action="/addurl" method="POST">
 				<div class="">
-				  <input type="url" style="width:300px" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
-				  <a href="#" id="search" class="btn btn-default">搜索</a>
-				<br />  
-				<ul id="detail">
+				  <input type="url" style="width:90%" class="form-control" id="fetchurl" name="fetchurl" placeholder="输入要下载的Youtube链接">
+				  <a href="#" id="search" style="width:8%" class="btn btn-default">搜索</a>
+				<br /> <br />
+				<ul id="detail" class="list-unstyled">
 								
 				</ul>
-				  <button type="submit" id="submit" style="display:none" class="btn btn-default">提交任务</button>
+				  <button type="submit" id="submit" style="display:none" class="btn btn-primary">提交任务</button>
 				</div>
 			</form>
 			
-			<div style="height:50px;"></div>
+			<div style="height:10px;"></div>
 			
 			<ul class="list-group">
 				{{range .}}
@@ -76,12 +76,6 @@
 				{{end}}
 			</ul>
 
-          </div>
-
-          <div class="mastfoot">
-            <div class="inner">
-            </div>
-          </div>
 
         </div>
 
@@ -98,8 +92,9 @@
 		$.post("/search", {fetchurl: url}, function(data){
 			var jsonData = eval("(" + data + ")");
 			var detail = $("#detail"); 
+			detail.html("");
 			$.each(jsonData, function(index, objVal) { //遍历对象数组，index是数组的索引号，objVal是遍历的一个对象。  					
-				$("<li>").html('<label for="f'+objVal["FormatId"]+'"> <input id="f'+objVal["FormatId"]+'" type="radio" value="'+objVal["FormatId"]+'" name="formatId"> Resolution: ' + objVal["Resolution"] + ' Extension: ' + objVal["Extension"] + " Note: " + objVal["Note"]+'</label>').appendTo(detail);
+				$("<li>").html('<label for="f'+objVal["FormatId"]+'"> <input id="f'+objVal["FormatId"]+'" type="radio" value="'+objVal["FormatId"]+'" name="formatId"> 分辨率: ' + objVal["Resolution"] + ' 扩展: ' + objVal["Extension"] + " 备注: " + objVal["Note"]+'</label>').appendTo(detail);
             });  
 			$("#submit").show();
 		});
