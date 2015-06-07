@@ -53,7 +53,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		C := mongo.Connect()
 
 		var tasks []Task
-		err := C.Find(nil).Sort("-_id").Limit(20).All(&tasks) //查询所有
+		err := C.Find(nil).Sort("-_id").Limit(10).All(&tasks) //查询所有
 		checkError(err)
 //	    for _, r := range tasks {
 //			fmt.Println(" r.fetchurl = "+r.Fetchurl+" r.status = ")
