@@ -71,11 +71,11 @@ func GetVideoQuality(url string) string {
 
 		conArr := strings.Fields(outputArr[i])
 
-		if len(conArr) > 4 && conArr[3] == "DASH" && conArr[4] == "video" {
+		if len(conArr) <=4 && len(conArr) >= 3 && conArr[2] != "Downloading"{
 
 			conStr3 := ""
-			for i := 3; i < len(conArr[3:])+3; i++ {
-				conStr3 += conArr[i]
+			if len(conArr) == 4 {
+				conStr3 = conArr[3]
 			}
 
 			videoQualities = append(videoQualities, VideoQuality{
